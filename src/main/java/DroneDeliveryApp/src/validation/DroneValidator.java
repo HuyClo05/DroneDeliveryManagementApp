@@ -1,9 +1,9 @@
 package DroneDeliveryApp.src.validation;
 
-import domain.Drone;
-import domain.Location;
-import domain.ShippingPackage;
-import model.enums.DroneStatus;
+import DroneDeliveryApp.src.domain.Drone;
+import DroneDeliveryApp.src.domain.Location;
+import DroneDeliveryApp.src.domain.ShippingPackage;
+import DroneDeliveryApp.src.model.enums.DroneStatus;
 import org.jetbrains.annotations.NotNull;
 
 public class DroneValidator implements Validator<Drone> {
@@ -83,7 +83,7 @@ public class DroneValidator implements Validator<Drone> {
         }
     }
 
-    public void validateLoadedPackage(Drone drone, ShippingPackage packageToLoad) throws IllegalStateException {
+    public void validateLoadedPackage(@NotNull Drone drone, @NotNull ShippingPackage packageToLoad) throws IllegalStateException {
         if (packageToLoad.getWeight() > drone.getMaxPayload()) {
             throw new IllegalArgumentException("Package weight exceeds max payload");
         }
@@ -92,7 +92,7 @@ public class DroneValidator implements Validator<Drone> {
         }
     }
 
-    public void validateUnloadedPackage(Drone drone, ShippingPackage packageToUnload) throws IllegalStateException {
+    public void validateUnloadedPackage(@NotNull Drone drone, ShippingPackage packageToUnload) throws IllegalStateException {
         if (drone.isEmpty()) {
             throw new IllegalStateException("Drone is empty");
         }

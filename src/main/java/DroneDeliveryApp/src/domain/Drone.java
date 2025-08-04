@@ -5,6 +5,7 @@ import DroneDeliveryApp.src.model.enums.DroneStatus;
 import DroneDeliveryApp.src.model.enums.IdType;
 import DroneDeliveryApp.src.validation.DroneValidator;
 import DroneDeliveryApp.src.validation.ValidationException;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents a drone with specific attributes and functionality.
@@ -117,7 +118,7 @@ public class Drone {
         System.out.printf("Drone %s is under maintenance\n", DRONE_ID);
     }
 
-    public void loadPackage(ShippingPackage apackage) {
+    public void loadPackage(@NotNull ShippingPackage apackage) {
         String DRONE_ID = this.getDroneId();
         String PACKAGE_ID = apackage.getPackage_id();
 
@@ -162,7 +163,7 @@ public class Drone {
 
 
     // domain.Delivery operations
-    public void performDelivery(Customer assignedCustomer) {
+    public void performDelivery(@NotNull Customer assignedCustomer) {
         String DRONE_ID = this.getDroneId();
         String PACKAGE_ID = assignedCustomer.getUserPackage().getPackage_id();
         String CUSTOMER_ID = assignedCustomer.getUserId();

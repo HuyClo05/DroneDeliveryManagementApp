@@ -13,7 +13,7 @@ public class DroneDeliveryManagementAppApplication {
         SpringApplication.run(DroneDeliveryManagementAppApplication.class, args);
     }
 
-    @GetMapping
+    @GetMapping("/")
     public String helloWorld() {
         return "Hello World!";
     }

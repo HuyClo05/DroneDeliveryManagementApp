@@ -9,6 +9,7 @@ import DroneDeliveryApp.src.Simulation.Generator.Util.RandomPasswordGenerator;
 import DroneDeliveryApp.src.domain.Location;
 import DroneDeliveryApp.src.domain.ShippingPackage;
 import DroneDeliveryApp.src.domain.user.Customer;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The CustomerGenerator class is responsible for generating an array of sender and recipient
@@ -21,6 +22,8 @@ import DroneDeliveryApp.src.domain.user.Customer;
  */
 final public class CustomerGenerator {
     private final Random random;
+    private final LocationGenerator senderLocationGenerator;
+    private final LocationGenerator recipientLocationGenerator;
     private final Customer[] senderList;
     private final Customer[] recipientList;
     private final PackageGenerator packageGenerator;
@@ -45,14 +48,16 @@ final public class CustomerGenerator {
         }
 
         this.random = random;
-        this.senderList = generateCustomer(customerNum, "sender");
-        this.recipientList = generateCustomer(customerNum, "recipient");
+        this.senderLocationGenerator = setupLocation(customerNum, "sender");
+        this.recipientLocationGenerator = setupLocation(customerNum, "recipient");
+        this.senderList = generateCustomer(customerNum, recipientLocationGenerator);
+        this.recipientList = generateCustomer(customerNum, recipientLocationGenerator);
         this.packageGenerator = new PackageGenerator(customerNum,
                                                     maxWeight,
                                                     senderList,
                                                     recipientList,
-                                                    null,
-                                                    null,
+                                                    senderLocationGenerator.getLocationList(),
+                                                    recipientLocationGenerator.getLocationList(),
                                                     random);
         assignPackageCustomerRelationship ();
     }
@@ -104,7 +109,7 @@ final public class CustomerGenerator {
         }
     }
 
-    private LocationGenerator setupLocation (int customerNum, String userType) {
+    private @NotNull LocationGenerator setupLocation (int customerNum, String userType) {
         LocationGenerator locationGenerator = new LocationGenerator(customerNum,
                                                                     null,
                                                                     null,
@@ -131,12 +136,11 @@ final public class CustomerGenerator {
      * which are randomly generated.
      *
      * @param customerNum the number of customers to generate; must be a positive integer
-     * @param userType the type of user for which customers are generated, either "sender" or "recipient"
+     * @param locationGenerator the locationGenerator you choose
      * @return an array of Customer objects with randomly generated details
      * @throws IllegalArgumentException if userType is not "sender" or "recipient"
      */
-    private Customer [] generateCustomer (int customerNum, String userType) {
-        LocationGenerator locationGenerator = setupLocation(customerNum, userType);
+    private Customer [] generateCustomer (int customerNum, LocationGenerator locationGenerator) {
         RandomNameGenerator nameGenerator = new RandomNameGenerator(customerNum, null, null, random);
         RandomEmailGenerator emailGenerator = new RandomEmailGenerator(customerNum, nameGenerator.getNameList(), null , random);
         RandomPhoneGenerator phoneGenerator = new RandomPhoneGenerator(customerNum, random);
@@ -147,13 +151,13 @@ final public class CustomerGenerator {
             String newName = nameGenerator.getNameList()[i];
             String newEmail = emailGenerator.getEmailList()[i];
             String newPhone = phoneGenerator.getPhoneList()[i];
-            String password = passwordGenerator.getPasswordList()[i];
+            String newPassword = passwordGenerator.getPasswordList()[i];
             Location newLocation = locationGenerator.getLocationList()[i];
 
             Customer newCustomer = new Customer(newName,
                                                 newEmail,
                                                 newPhone,
-                                                password,
+                                                newPassword,
                                                 newLocation,
                                                 null);
             customers[i] = newCustomer;

@@ -1,0 +1,60 @@
+package DroneDeliveryApp.src.Simulation.Generator.Util;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Set;
+
+/**
+ * RandomPhoneGenerator is a utility class designed to generate random phone numbers
+ * and provide them in an easily accessible manner.
+ * It allows the generation of a specific number of random phone numbers in a ten-digit format.
+ */
+public final class RandomPhoneGenerator {
+    private final Random random;
+    private final String[] phoneList;
+
+    /**
+     * Constructs a RandomPhoneGenerator object that generates a specified number of random phone numbers
+     * using the provided Random instance for number generation.
+     *
+     * @param phoneNum the number of random phone numbers to generate; must be a positive integer
+     * @param random the Random instance used for generating random numbers
+     * @throws IllegalArgumentException if the phone number count is non-positive
+     */
+    public RandomPhoneGenerator(int phoneNum, Random random) {
+        this.random = random;
+        this.phoneList = generatePhone(phoneNum);
+    }
+
+    /**
+     * Generates an array of random phone numbers in the format "XXX-XXX-XXXX".
+     * Each phone number is composed of a random area code, prefix, and line number.
+     * The area codes and prefixes avoid ranges starting with 0 or 1.
+     *
+     * @param phoneNum the number of phone numbers to generate; must be a positive integer
+     * @return an array of generated phone numbers
+     * @throws IllegalArgumentException if the phone number count is non-positive
+     */
+    public @NotNull String[] generatePhone(int phoneNum) {
+        if (phoneNum <= 0) {
+            throw new IllegalArgumentException("Number of phone numbers must be positive");
+        }
+
+        Set<String> phones = new HashSet<>();
+        while (phones.size() < phoneNum) {
+            String areaCode = String.format("%03d", random.nextInt(800) + 200);
+            String prefix = String.format("%03d", random.nextInt(743) + 200);
+            String lineNumber = String.format("%04d", random.nextInt(10000));
+            String newPhoneNumber =  areaCode + "-" + prefix + "-" + lineNumber;
+            phones.add(newPhoneNumber);
+        }
+        return phones.toArray(new String[0]);
+    }
+
+    // Getters
+    public String[] getPhoneList() {
+        return this.phoneList.clone();
+    }
+}

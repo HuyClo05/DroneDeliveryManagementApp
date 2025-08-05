@@ -5,6 +5,8 @@ import DroneDeliveryApp.src.model.enums.DroneStatus;
 import DroneDeliveryApp.src.model.enums.IdType;
 import DroneDeliveryApp.src.validation.DroneValidator;
 import DroneDeliveryApp.src.validation.ValidationException;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Id;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -12,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
  * This class provides methods to manage and retrieve the state of a drone,
  * including its name, id, availability, battery level, and load capacity.
  */
+@Embeddable
 public class Drone {
     private final static DroneValidator droneValidator = new DroneValidator();
     private final static Location base = new Location("base1",
@@ -22,16 +25,17 @@ public class Drone {
                                                     "Germany",
                                                     52.3738f,
                                                     9.7312f);
-
-    private final IdentificationNumber droneId;
-    private final float maxPayload;
+    @Id
+    private IdentificationNumber droneId;
+    private float maxPayload;
     private boolean isEmpty;
-    private final Location currentLocation;
+    private Location currentLocation;
     private int batteryLevel;
     private float mileage;
     private DroneStatus status;
-    private Customer assignedCustomer;
+    private ShippingPackage assignedPackage;
 
+    public Drone(){}
 
     public Drone(float maxPayload,
                  int batteryLevel,
@@ -51,7 +55,7 @@ public class Drone {
         this.batteryLevel = batteryLevel;
         this.mileage = mileage;
         this.status = DroneStatus.IDLE;
-        this.assignedCustomer = null;
+        this.assignedPackage = null;
         droneValidator.validate(this);
     }
 
@@ -65,7 +69,7 @@ public class Drone {
     public int getBatteryLevel() { return this.batteryLevel; }
     public float getMileage() { return this.mileage; }
     public DroneStatus getStatus() { return this.status; }
-    public Customer getAssignedCustomer() { return assignedCustomer; }
+    public ShippingPackage getAssignedPackage() { return assignedPackage; }
 
 
     // Setters
@@ -95,8 +99,8 @@ public class Drone {
         droneValidator.validate(this);
     }
 
-    public void setAssignedCustomer(Customer customer) throws ValidationException {
-        this.assignedCustomer = customer;
+    public void setAssignedPackage(ShippingPackage assignedPackage) throws ValidationException {
+        this.assignedPackage = assignedPackage;
         droneValidator.validate(this);
     }
 
@@ -136,9 +140,9 @@ public class Drone {
 
     public void unloadPackage() {
         String DRONE_ID = this.getDroneId();
-        String CUSTOMER_PACKAGE_ID = this.assignedCustomer.getUserPackage().getPackage_id();
-        Location customerDestination = this.assignedCustomer.getAddress();
-        ShippingPackage customerPackage = this.assignedCustomer.getUserPackage();
+        String CUSTOMER_PACKAGE_ID = this.assignedPackage.getPackage_id();
+        Location customerDestination = this.assignedPackage.getRecipient().getAddress();
+        ShippingPackage customerPackage = this.assignedPackage;
 
         try {
             droneValidator.validateDroneAtLocation(this, customerDestination, "unload a package");
@@ -165,19 +169,19 @@ public class Drone {
     // domain.Delivery operations
     public void performDelivery(@NotNull Customer assignedCustomer) {
         String DRONE_ID = this.getDroneId();
-        String PACKAGE_ID = assignedCustomer.getUserPackage().getPackage_id();
-        String CUSTOMER_ID = assignedCustomer.getUserId();
+        String PACKAGE_ID = this.assignedPackage.getPackage_id();
+        String CUSTOMER_ID = this.assignedPackage.getRecipient().getUserId();
 
         System.out.printf("\nDrone %s started deliver package %s to customer %s\n", DRONE_ID, PACKAGE_ID, CUSTOMER_ID);
         droneValidator.validateDroneAtLocation(this, base, "start delivering");
         droneValidator.validateDroneStatus(this, DroneStatus.IDLE, "start delivering");
 
-        loadPackage(assignedCustomer.getUserPackage());
+        loadPackage(this.assignedPackage);
         this.status = DroneStatus.IN_TRANSIT;
         goTo(assignedCustomer.getAddress());
         unloadPackage();
         goTo(base);
-        this.assignedCustomer = null;
+        this.assignedPackage = null;
 
         droneValidator.validateDroneAtLocation(this, base, "finish delivering");
         droneValidator.validateDroneStatus(this, DroneStatus.IN_TRANSIT, "finish delivering");

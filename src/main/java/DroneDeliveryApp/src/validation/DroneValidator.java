@@ -17,19 +17,19 @@ public class DroneValidator implements Validator<Drone> {
             throw new ValidationException("Drone ID must not be null.");
         }
 
-        validatePayloadAndCustomer(drone);
+        validatePayload(drone);
         validateLocation(drone);
         validateBatteryAndMileage(drone);
         validateStatus(drone);
     }
 
-    private void validatePayloadAndCustomer(@NotNull Drone drone) throws ValidationException {
+    private void validatePayload(@NotNull Drone drone) throws ValidationException {
         // Max payload validation
         if (drone.getMaxPayload() < 0) {
             throw new ValidationException("Max payload must be non-negative.");
         }
-        if (!drone.isEmpty() && drone.getAssignedCustomer() == null) {
-            throw new ValidationException("Drone with payload must have an assigned customer.");
+        if (!drone.isEmpty() && drone.getAssignedPackage() == null) {
+            throw new ValidationException("Drone is not empty while drone.getAssignedPackage() is null.");
         }
     }
 
@@ -57,8 +57,8 @@ public class DroneValidator implements Validator<Drone> {
         }
 
         // assignedCustomer and status validation
-        if (drone.getStatus() == DroneStatus.MAINTENANCE && drone.getAssignedCustomer() != null) {
-            throw new ValidationException("Drone in maintenance mode should not have an assigned customer.");
+        if (drone.getStatus() == DroneStatus.MAINTENANCE && drone.getAssignedPackage() != null) {
+            throw new ValidationException("Drone in maintenance mode should not have an assigned package.");
         }
     }
 

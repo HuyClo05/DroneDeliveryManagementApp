@@ -3,16 +3,27 @@ package DroneDeliveryApp.src.domain.user;
 import DroneDeliveryApp.src.domain.IdentificationNumber;
 import DroneDeliveryApp.src.model.enums.IdType;
 import DroneDeliveryApp.src.model.enums.UserStatus;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.MappedSuperclass;
 
+
+@MappedSuperclass
 public abstract class User {
-    private final IdentificationNumber id;
+    @EmbeddedId
+    private IdentificationNumber id;
     private String name;
     private String email;
     private String phone;
-    private final String password;
+    private String password;
+
+    @Enumerated(EnumType.STRING)
     private UserStatus userStatus;
 
-    public User(String name,
+    protected User(){}
+
+    protected User(String name,
                 String email,
                 String phone,
                 String password) {
@@ -42,4 +53,6 @@ public abstract class User {
     public void setPhone(String phone) {
         this.phone = phone;
     }
+
+    public String getPassword(Customer user) { return password; }
 }

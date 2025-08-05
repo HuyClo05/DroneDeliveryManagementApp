@@ -59,54 +59,6 @@ final public class CustomerGenerator {
                                                     senderLocationGenerator.getLocationList(),
                                                     recipientLocationGenerator.getLocationList(),
                                                     random);
-        assignPackageCustomerRelationship ();
-    }
-    
-    /**
-     * Assigns a relationship between sender customers, recipient customers, and shipping packages.
-     * <p>
-     * This method retrieves a list of generated shipping packages and iterates through them, 
-     * assigning a specific sender and recipient customer to each package. Additionally, it 
-     * associates the package with the respective sender and recipient customers. The mapping 
-     * between customers and packages follows a one-to-one correspondence defined by the 
-     * indices of the senderList, recipientList, and the package list.
-     * </p>
-     * <p>
-     * The relationships established are as follows:
-     * <ul>
-     *   <li>Each package is assigned a sender and recipient customer.</li>
-     *   <li>Each sender and recipient customer is assigned the same package.</li>
-     * </ul>
-     * </p>
-     * <p>
-     * <b>Preconditions:</b>
-     * <ul>
-     *   <li>The senderList, recipientList, and package list must have non-null and equal lengths.</li>
-     *   <li>Each index in the senderList and recipientList corresponds to the same index in the package list.</li>
-     * </ul>
-     * </p>
-     * <p>
-     * <b>Postconditions:</b>
-     * <ul>
-     *   <li>Each shipping package will have its sender and recipient fields set to the corresponding customers.</li>
-     *   <li>Each sender and recipient customer will have its user package field set to the corresponding package.</li>
-     * </ul>
-     * </p>
-     * <p>
-     * This method assumes that the arrays {@code senderList}, {@code recipientList}, and the result of 
-     * {@code packageGenerator.getPackageList()} have been initialized and populated before invoking this method.
-     * </p>
-     */
-    private void assignPackageCustomerRelationship () {
-        ShippingPackage[] packages = this.packageGenerator.getPackageList();
-        for (int i = 0; i < packages.length; i++){
-            Customer sender = this.senderList[i];
-            Customer recipient = this.recipientList[i];
-            sender.setUserPackage(packages[i]);
-            recipient.setUserPackage(packages[i]);
-            packages[i].setSender(sender);
-            packages[i].setRecipient(recipient);
-        }
     }
 
     private @NotNull LocationGenerator setupLocation (int customerNum, String userType) {
@@ -158,8 +110,7 @@ final public class CustomerGenerator {
                                                 newEmail,
                                                 newPhone,
                                                 newPassword,
-                                                newLocation,
-                                                null);
+                                                newLocation);
             customers[i] = newCustomer;
         }
         return customers;

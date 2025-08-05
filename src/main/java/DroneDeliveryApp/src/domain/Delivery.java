@@ -6,19 +6,25 @@ import DroneDeliveryApp.src.domain.ShippingPackage;
 import DroneDeliveryApp.src.domain.Drone;
 import DroneDeliveryApp.src.model.enums.DeliveryStatus;
 import DroneDeliveryApp.src.model.enums.IdType;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
 
+@Entity
 public class Delivery {
-    private final IdentificationNumber deliveryId;
-    private final ShippingPackage packages;
-    private final Drone drones;
-    private final LocalDateTime startTime;
-    private final LocalDateTime endTime;
-    private final DeliveryStatus status;
+    @EmbeddedId
+    private IdentificationNumber deliveryId;
+    private ShippingPackage packages;
+    private Drone drones;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
+    private DeliveryStatus status;
+
+    public Delivery(){}
 
     public Delivery(ShippingPackage packages,
-                           Drone drones,
-                           LocalDateTime startTime,
-                           LocalDateTime endTime) {
+                    Drone drones,
+                    LocalDateTime startTime,
+                    LocalDateTime endTime) {
 
         this.deliveryId = new IdentificationNumber(IdType.DELIVERY_HISTORY);
         this.packages = packages;

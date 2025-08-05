@@ -2,27 +2,62 @@ package DroneDeliveryApp.src.Simulation.Generator;
 
 import java.util.Random;
 import DroneDeliveryApp.src.domain.Drone;
+import DroneDeliveryApp.src.validation.ValidationException;
 
 public class DroneGenerator {
-    Random random = new Random();
-    private int droneNum;
-    private Drone[] droneList;
-    private float maxPayload;
+    private final Random random;
+    private final Drone[] droneList;
 
 
-    public DroneGenerator(int droneNum) {
-        this.droneNum = droneNum;
-        this.droneList = new Drone[droneNum];
-        this.maxPayload = 22.7f;
+    public DroneGenerator(int droneNum, float maxPayload, float maxMileage, Random random) throws ValidationException {
+        this.random = random;
+        this.droneList = generateDrones(droneNum, maxPayload, maxMileage);
     }
 
-    public float[] randomPayload (){
-        int payload = random.nextInt((int) maxPayload);
-        float[] payloadArray = new float[payload];
-
-        for (int i = 0; i < payload; i++) {
-            payloadArray[i] = random.nextFloat();
+    public float[] randomPayloads (int droneNum, float maxPayload) {
+        float[] payloads = new float[droneNum];
+        for (int i = 0; i < droneNum; i++) {
+            payloads[i] = 0.5f + random.nextFloat() * (maxPayload - 0.5f);
         }
-        return payloadArray;
+        return payloads;
+    }
+
+    public float[] randomMileages(int droneNum, float maxMileage) {
+        float[] mileages = new float[droneNum];
+        float minMileage = 5.0f;
+        float cappedMax = Math.min(maxMileage, 50.0f); // Ensure max doesn't exceed 50.0f
+        for (int i = 0; i < droneNum; i++) {
+            mileages[i] = minMileage + random.nextFloat() * (cappedMax - minMileage);
+        }
+        return mileages;
+    }
+
+    public int[] randomBatteryLevels(int droneNum) {
+        int[] batteryLevels = new int[droneNum];
+        for (int i = 0; i < droneNum; i++) {
+            batteryLevels[i] = 1 + random.nextInt(100 - 1);
+        }
+        return batteryLevels;
+    }
+
+    public Drone[] generateDrones(int droneNum, float maxPayload, float maxMileage) throws ValidationException {
+        float[] payloads = randomPayloads(droneNum, maxPayload);
+        float[] mileages = randomMileages(droneNum, maxMileage);
+        int[] batteryLevels = randomBatteryLevels(droneNum);
+
+        Drone[] drones = new Drone[droneNum];
+        for (int i = 0; i < droneNum; i++){
+            float newPayload = payloads[i];
+            float newMileages = mileages[i];
+            int newBatteryLevel = batteryLevels[i];
+            Drone newDrone = new Drone(newPayload, newBatteryLevel, newMileages);
+            drones[i] = newDrone;
+        }
+        return drones;
+    }
+
+    // Getters
+    public Drone[] getDroneList() {
+        return this.droneList.clone();
     }
 }

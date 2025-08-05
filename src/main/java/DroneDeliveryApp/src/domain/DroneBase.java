@@ -1,17 +1,22 @@
 package DroneDeliveryApp.src.domain;
 
 import DroneDeliveryApp.src.model.enums.IdType;
-import DroneDeliveryApp.src.domain.Location;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.EmbeddedId;
 
+@Embeddable
 public class DroneBase {
-    private final IdentificationNumber baseId;
-    private final Location location;
-    private final String name;
-    private final int capacity;
+    @EmbeddedId
+    private IdentificationNumber baseId;
+    private Location location;
+    private String name;
+    private int capacity;
+
+    public DroneBase(){}
 
     public DroneBase(Location location,
-              String name,
-              int capacity){
+                     String name,
+                     int capacity){
 
         this.baseId = new IdentificationNumber(IdType.BASE);
         this.location = location;

@@ -2,15 +2,18 @@ package DroneDeliveryApp.src.domain;
 
 import java.util.Objects;
 
-import DroneDeliveryApp.src.domain.user.Customer;
 import DroneDeliveryApp.src.model.enums.IdType;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.EmbeddedId;
 
 /**
  * Represents a geographic location with detailed address information
  * including latitude and longitude coordinates.
  */
+@Embeddable
 public class Location {
-    private final IdentificationNumber locationId;
+    @EmbeddedId
+    private IdentificationNumber locationId;
     private String addressLine1;
     private String addressLine2;
     private String city;
@@ -19,6 +22,8 @@ public class Location {
     private String country;
     private float latitude;
     private float longitude;
+
+    public Location(){}
 
     public Location(String addressLine1,
                     String addressLine2,

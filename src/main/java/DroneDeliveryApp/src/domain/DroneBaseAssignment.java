@@ -1,11 +1,15 @@
 package DroneDeliveryApp.src.domain;
 
-import DroneDeliveryApp.src.domain.Drone;
-import DroneDeliveryApp.src.domain.DroneBase;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
 
+@Entity
 public class DroneBaseAssignment {
-    private final Drone drone;
-    private final DroneBase droneBase;
+    @EmbeddedId
+    private Drone drone;
+    private DroneBase droneBase;
+
+    public DroneBaseAssignment(){}
 
     public DroneBaseAssignment(Drone drone, DroneBase droneBase) {
         this.drone = drone;

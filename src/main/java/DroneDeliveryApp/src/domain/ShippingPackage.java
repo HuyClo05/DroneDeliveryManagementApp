@@ -3,17 +3,21 @@ package DroneDeliveryApp.src.domain;
 import DroneDeliveryApp.src.domain.user.Customer;
 import DroneDeliveryApp.src.model.enums.IdType;
 import DroneDeliveryApp.src.model.enums.PackageStatus;
+import jakarta.persistence.*;
 
+@Embeddable
 public class ShippingPackage {
-    private final IdentificationNumber packageId;
-    private final double weight;
-    private final String description;
+    @EmbeddedId
+    private IdentificationNumber packageId;
+    private double weight;
+    private String description;
     private Customer sender;
     private Customer recipient;
-    private final Location pickupLocation;
-    private final Location deliveryLocation;
+    private Location pickupLocation;
+    private Location deliveryLocation;
     private PackageStatus status;
 
+    public ShippingPackage(){}
 
     public ShippingPackage(double weight,
                            String description,

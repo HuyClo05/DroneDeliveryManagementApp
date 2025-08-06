@@ -35,6 +35,22 @@ public class Delivery {
         this.status = DeliveryStatus.STARTED;
     }
 
+    // Getters
+    public IdentificationNumber getDeliveryId() { return this.deliveryId; }
+    public ShippingPackage getPackages() { return this.packages; }
+    public Drone getDrones() { return this.drones; }
+    public LocalDateTime getStartTime() { return this.startTime; }
+    public LocalDateTime getEndTime() { return this.endTime; }
+    public DeliveryStatus getStatus() { return this.status; }
+
+    // Setters
+    public void setPackages(ShippingPackage packages) { this.packages = packages; }
+    public void setDrones(Drone drones) { this.drones = drones; }
+    public void setStartTime(LocalDateTime startTime) { this.startTime = startTime; }
+    public void setEndTime(LocalDateTime endTime) { this.endTime = endTime; }
+    public void setStatus(DeliveryStatus status) { this.status = status; }
+
+    // Public Methods
     /**
      * (For Simulation and Unit Test only.) Constructs a new Delivery with the specified parameters.
      * Initializes the delivery ID and sets the provided values for package, drone, start time, and end time.
@@ -56,19 +72,4 @@ public class Delivery {
         this.endTime = endTime;
         this.status = DeliveryStatus.STARTED;
     }
-
-    // Getters
-    public IdentificationNumber getDeliveryId() { return this.deliveryId; }
-    public ShippingPackage getPackages() { return this.packages; }
-    public Drone getDrones() { return this.drones; }
-    public LocalDateTime getStartTime() { return this.startTime; }
-    public LocalDateTime getEndTime() { return this.endTime; }
-    public DeliveryStatus getStatus() { return this.status; }
-
-    // Setters
-    public void setPackages(ShippingPackage packages) { this.packages = packages; }
-    public void setDrones(Drone drones) { this.drones = drones; }
-    public void setStartTime(LocalDateTime startTime) { this.startTime = startTime; }
-    public void setEndTime(LocalDateTime endTime) { this.endTime = endTime; }
-    public void setStatus(DeliveryStatus status) { this.status = status; }
 }

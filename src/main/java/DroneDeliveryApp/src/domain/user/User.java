@@ -41,18 +41,9 @@ public abstract class User {
     public String getEmail() { return email; }
     public String getPhone() { return phone; }
 
-    // Setters with validation
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
+    // Setters
+    public void setName(String name) { this.name = name; }
+    public void setEmail(String email) { this.email = email; }
+    public void setPhone(String phone) { this.phone = phone; }
     public String getPassword(Customer user) { return password; }
 }

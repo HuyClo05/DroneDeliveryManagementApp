@@ -59,7 +59,6 @@ public class Drone {
         droneValidator.validate(this);
     }
 
-
     // Getters
     public Location getBase() { return base; }
     public String getDroneId() { return this.droneId.getId(); }
@@ -70,7 +69,6 @@ public class Drone {
     public float getMileage() { return this.mileage; }
     public DroneStatus getStatus() { return this.status; }
     public ShippingPackage getAssignedPackage() { return assignedPackage; }
-
 
     // Setters
     public void setEmpty(boolean isEmpty) throws ValidationException {
@@ -105,7 +103,7 @@ public class Drone {
     }
 
 
-    // Action operations
+    // Public Methods
     public void chargeBattery() {
         String DRONE_ID = this.getDroneId();
 
@@ -165,8 +163,6 @@ public class Drone {
         System.out.printf("Drone %s is going to %s", DRONE_ID, DESTINATION_ADDRESS);
     }
 
-
-    // domain.Delivery operations
     public void performDelivery(@NotNull Customer assignedCustomer) {
         String DRONE_ID = this.getDroneId();
         String PACKAGE_ID = this.assignedPackage.getPackage_id();

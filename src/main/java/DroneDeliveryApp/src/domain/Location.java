@@ -89,7 +89,7 @@ public class Location {
         this.longitude = longitude;
     }
 
-    // Methods
+    // Public Methods
     /**
      * Give out latitude and longitude
      *

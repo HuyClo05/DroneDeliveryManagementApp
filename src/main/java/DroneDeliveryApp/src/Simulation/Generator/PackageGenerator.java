@@ -3,6 +3,7 @@ package DroneDeliveryApp.src.Simulation.Generator;
 import DroneDeliveryApp.src.domain.ShippingPackage;
 import DroneDeliveryApp.src.domain.user.Customer;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
@@ -103,7 +104,8 @@ final public class PackageGenerator {
     }
 
     // Getters
-    public List<ShippingPackage> getPackageList() {
+    @Contract(value = " -> new", pure = true)
+    public @NotNull List<ShippingPackage> getPackageList() {
         return new ArrayList<>(this.packageList);
     }
 }

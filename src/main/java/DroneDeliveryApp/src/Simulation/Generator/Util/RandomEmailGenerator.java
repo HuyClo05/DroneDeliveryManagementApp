@@ -1,5 +1,6 @@
 package DroneDeliveryApp.src.Simulation.Generator.Util;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -71,14 +72,15 @@ public final class RandomEmailGenerator {
         return emails;
     }
 
-    private String nameToEmailUsername(String name) {
+    private @NotNull String nameToEmailUsername(@NotNull String name) {
         return name.toLowerCase()
                 .replace(" ", ".")
                 .replaceAll("[^a-zA-Z0-9._-]", "");
     }
 
     //Getters
-    public List<String> getEmailList() {
+    @Contract(value = " -> new", pure = true)
+    public @NotNull List<String> getEmailList() {
         return new ArrayList<>(this.emailList);
     }
 }

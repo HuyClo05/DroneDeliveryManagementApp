@@ -1,5 +1,8 @@
 package DroneDeliveryApp.src.Simulation.Generator.Util;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -35,7 +38,7 @@ public final class RandomPasswordGenerator {
      * @return an ArrayList of randomly generated passwords
      * @throws IllegalArgumentException if the specified number of passwords is non-positive
      */
-    public List<String> generatePassword(int passwordNum) {
+    public @NotNull List<String> generatePassword(int passwordNum) {
         List<String> passwords = new ArrayList<>(passwordNum);
 
         for (int i = 0; i < passwordNum; i++) {
@@ -50,7 +53,8 @@ public final class RandomPasswordGenerator {
     }
 
     // Getters
-    public List<String> getPasswordList() {
+    @Contract(value = " -> new", pure = true)
+    public @NotNull List<String> getPasswordList() {
         return new ArrayList<>(this.passwordList);
     }
 }

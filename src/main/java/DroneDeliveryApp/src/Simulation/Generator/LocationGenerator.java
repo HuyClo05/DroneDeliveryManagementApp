@@ -1,6 +1,8 @@
 package DroneDeliveryApp.src.Simulation.Generator;
 
 import DroneDeliveryApp.src.domain.Location;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +75,7 @@ public final class LocationGenerator {
      *         and random latitude and longitude values
      * @throws IllegalArgumentException if locationNum is less than or equal to zero
      */
-    private List<Location> generateLocations (int locationNum){
+    private @NotNull List<Location> generateLocations (int locationNum){
         if (locationNum <= 0) {
             throw new IllegalArgumentException("Number of locations must be positive");
         }
@@ -96,7 +98,8 @@ public final class LocationGenerator {
     }
 
     // Getters
-    public List<Location> getLocationList() {
+    @Contract(value = " -> new", pure = true)
+    public @NotNull List<Location> getLocationList() {
         return new ArrayList<>(this.locationList);
     }
 

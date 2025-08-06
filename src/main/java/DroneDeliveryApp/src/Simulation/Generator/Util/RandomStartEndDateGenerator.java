@@ -1,5 +1,7 @@
 package DroneDeliveryApp.src.Simulation.Generator.Util;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.time.LocalDateTime;
 import java.util.Random;
 
@@ -21,7 +23,7 @@ public class RandomStartEndDateGenerator {
         this.endTime = times[1];
     }
 
-    private LocalDateTime[] generateStartEndDate(int year, int month, int day) {
+    private LocalDateTime @NotNull [] generateStartEndDate(int year, int month, int day) {
         int dayHourRange = MAX_HOUR - MIN_HOUR;
         int randomPickupHour = random.nextInt(dayHourRange);
         int randomPickupMinute = random.nextInt(MAX_MINUTE);

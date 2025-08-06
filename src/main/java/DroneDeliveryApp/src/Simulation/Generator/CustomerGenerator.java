@@ -64,7 +64,7 @@ final public class CustomerGenerator {
      * @return an ArrayList of Customer objects with randomly generated details
      * @throws IllegalArgumentException if userType is not "sender" or "recipient"
      */
-    private List<Customer> generateCustomer (int customerNum, LocationGenerator locationGenerator) {
+    private @NotNull List<Customer> generateCustomer (int customerNum, LocationGenerator locationGenerator) {
         RandomNameGenerator nameGenerator = new RandomNameGenerator(customerNum, null, null, random);
         RandomEmailGenerator emailGenerator = new RandomEmailGenerator(customerNum, nameGenerator.getNameList(), null , random);
         RandomPhoneGenerator phoneGenerator = new RandomPhoneGenerator(customerNum, random);
@@ -88,7 +88,7 @@ final public class CustomerGenerator {
         return customers;
     }
 
-    private @NotNull LocationGenerator setupLocation (int customerNum, String userType) {
+    private @NotNull LocationGenerator setupLocation (int customerNum, @NotNull String userType) {
         LocationGenerator locationGenerator = new LocationGenerator(customerNum,
                                                                     null,
                                                                     null,

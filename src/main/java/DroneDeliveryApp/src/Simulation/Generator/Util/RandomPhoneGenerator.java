@@ -1,5 +1,6 @@
 package DroneDeliveryApp.src.Simulation.Generator.Util;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -52,7 +53,8 @@ public final class RandomPhoneGenerator {
     }
 
     // Getters
-    public List<String> getPhoneList() {
+    @Contract(value = " -> new", pure = true)
+    public @NotNull List<String> getPhoneList() {
         return new ArrayList<>(this.phoneList);
     }
 }

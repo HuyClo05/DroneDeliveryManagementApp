@@ -1,17 +1,36 @@
 package DroneDeliveryApp.src.Simulation.Generator;
 
-import java.util.Random;
 import DroneDeliveryApp.src.domain.Drone;
 import DroneDeliveryApp.src.validation.ValidationException;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+
 public class DroneGenerator {
     private final Random random;
-    private final Drone[] droneList;
-
+    private final List<Drone> droneList;
 
     public DroneGenerator(int droneNum, float maxPayload, float maxMileage, Random random) throws ValidationException {
         this.random = random;
         this.droneList = generateDrones(droneNum, maxPayload, maxMileage);
+    }
+
+    public List<Drone> generateDrones(int droneNum, float maxPayload, float maxMileage) throws ValidationException {
+        float[] payloads = randomPayloads(droneNum, maxPayload);
+        float[] mileages = randomMileages(droneNum, maxMileage);
+        int[] batteryLevels = randomBatteryLevels(droneNum);
+
+        List<Drone> drones = new ArrayList<>(droneNum);
+        for (int i = 0; i < droneNum; i++){
+            float newPayload = payloads[i];
+            float newMileages = mileages[i];
+            int newBatteryLevel = batteryLevels[i];
+            Drone newDrone = new Drone(newPayload, newBatteryLevel, newMileages);
+            drones.add(newDrone);
+        }
+        return drones;
     }
 
     public float[] randomPayloads (int droneNum, float maxPayload) {
@@ -40,24 +59,8 @@ public class DroneGenerator {
         return batteryLevels;
     }
 
-    public Drone[] generateDrones(int droneNum, float maxPayload, float maxMileage) throws ValidationException {
-        float[] payloads = randomPayloads(droneNum, maxPayload);
-        float[] mileages = randomMileages(droneNum, maxMileage);
-        int[] batteryLevels = randomBatteryLevels(droneNum);
-
-        Drone[] drones = new Drone[droneNum];
-        for (int i = 0; i < droneNum; i++){
-            float newPayload = payloads[i];
-            float newMileages = mileages[i];
-            int newBatteryLevel = batteryLevels[i];
-            Drone newDrone = new Drone(newPayload, newBatteryLevel, newMileages);
-            drones[i] = newDrone;
-        }
-        return drones;
-    }
-
     // Getters
-    public Drone[] getDroneList() {
-        return this.droneList.clone();
+    public List<Drone> getDroneList() {
+        return new ArrayList<>(this.droneList);
     }
 }

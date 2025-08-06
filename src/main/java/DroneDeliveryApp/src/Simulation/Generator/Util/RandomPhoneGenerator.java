@@ -2,9 +2,7 @@ package DroneDeliveryApp.src.Simulation.Generator.Util;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 /**
  * RandomPhoneGenerator is a utility class designed to generate random phone numbers
@@ -13,7 +11,7 @@ import java.util.Set;
  */
 public final class RandomPhoneGenerator {
     private final Random random;
-    private final String[] phoneList;
+    private final List<String> phoneList;
 
     /**
      * Constructs a RandomPhoneGenerator object that generates a specified number of random phone numbers
@@ -34,15 +32,15 @@ public final class RandomPhoneGenerator {
      * The area codes and prefixes avoid ranges starting with 0 or 1.
      *
      * @param phoneNum the number of phone numbers to generate; must be a positive integer
-     * @return an array of generated phone numbers
+     * @return an ArrayList of generated phone numbers
      * @throws IllegalArgumentException if the phone number count is non-positive
      */
-    public @NotNull String[] generatePhone(int phoneNum) {
+    public @NotNull List<String> generatePhone(int phoneNum) {
         if (phoneNum <= 0) {
             throw new IllegalArgumentException("Number of phone numbers must be positive");
         }
 
-        Set<String> phones = new HashSet<>();
+        List<String> phones = new ArrayList<>(phoneNum);
         while (phones.size() < phoneNum) {
             String areaCode = String.format("%03d", random.nextInt(800) + 200);
             String prefix = String.format("%03d", random.nextInt(743) + 200);
@@ -50,11 +48,11 @@ public final class RandomPhoneGenerator {
             String newPhoneNumber =  areaCode + "-" + prefix + "-" + lineNumber;
             phones.add(newPhoneNumber);
         }
-        return phones.toArray(new String[0]);
+        return phones;
     }
 
     // Getters
-    public String[] getPhoneList() {
-        return this.phoneList.clone();
+    public List<String> getPhoneList() {
+        return new ArrayList<>(this.phoneList);
     }
 }

@@ -2,6 +2,9 @@ package DroneDeliveryApp.src.Simulation.Generator.Util;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -9,12 +12,12 @@ import java.util.Random;
  * using a predefined list of names and domains.
  */
 public final class RandomEmailGenerator {
+    private static final List<String> DEFAULT_DOMAINS = new ArrayList<>(
+            Arrays.asList("gmail.com", "yahoo.com", "hotmail.com", "outlook.com", "icloud.com", "aol.com")
+    );
     private final Random random;
-    private final String[] emailList;
-    private final String[] domains;
-    private static final String[] DEFAULT_DOMAINS = {
-            "gmail.com", "yahoo.com", "hotmail.com", "outlook.com", "icloud.com", "aol.com"
-    };
+    private final List<String> emailList;
+    private final List<String> domains;
 
     /**
      * Constructs a RandomEmailGenerator object that generates random email addresses.
@@ -27,38 +30,44 @@ public final class RandomEmailGenerator {
      * @param random the Random instance used for generating random indices for domain selection
      * @throws IllegalArgumentException if the name list is null or empty, or if the email number is non-positive
      */
-    public RandomEmailGenerator(int emailNum, String[] nameList, String[] customDomains, Random random) {
-        this.domains = customDomains != null && customDomains.length > 0 ? customDomains : DEFAULT_DOMAINS;
+    public RandomEmailGenerator(int emailNum, List<String> nameList, List<String> customDomains, Random random) {
         this.random = random;
+        this.domains = customDomains != null && !customDomains.isEmpty() ? customDomains : DEFAULT_DOMAINS;
         this.emailList = generateEmail(emailNum, nameList);
     }
 
     /**
-     * Generates an array of email addresses based on the provided number of emails to generate
+     * Generates an Arraylist of email addresses based on the provided number of emails to generate
      * and the corresponding list of usernames. Each email is formed by converting the names to
      * lowercase, replacing spaces with underscores, and appending a randomly selected domain.
      *
      * @param emailNum the number of email addresses to generate; must be a positive integer
      * @param nameList the list of names to use for generating email addresses; must not be null or empty
-     * @return an array of generated email addresses
+     * @return an ArrayList of generated email addresses
      * @throws IllegalArgumentException if the name list is null or empty, or if the email number is non-positive
      */
-    public @NotNull String[] generateEmail(int emailNum, String[] nameList) {
-        if (nameList == null || nameList.length == 0) {
+    public @NotNull List<String> generateEmail(int emailNum, List<String> nameList) {
+        if (nameList == null || nameList.isEmpty()) {
             throw new IllegalArgumentException("Name list cannot be null or empty");
         }
         if (emailNum <= 0) {
             throw new IllegalArgumentException("Email number must be positive");
         }
+        if (emailNum > nameList.size()) {
+            throw new IllegalArgumentException("Requested emailNum exceeds available names");
+        }
 
-        String[] emails = new String[emailNum];
+        List<String> emails = new ArrayList<>(emailNum);
+
         for (int i = 0; i < emailNum; i++) {
             StringBuilder email = new StringBuilder();
-            String name = nameToEmailUsername(nameList[i]);
-            String domain = domains[random.nextInt(domains.length)];
+            String name = nameToEmailUsername(nameList.get(i));
+            int randomDomainIndex = random.nextInt(domains.size());
+            String domain = domains.get(randomDomainIndex);
             email.append(name).append("@").append(domain);
-            emails[i] = email.toString();
+            emails.add(email.toString());
         }
+
         return emails;
     }
 
@@ -69,7 +78,7 @@ public final class RandomEmailGenerator {
     }
 
     //Getters
-    public String[] getEmailList() {
-        return emailList.clone();
+    public List<String> getEmailList() {
+        return new ArrayList<>(this.emailList);
     }
 }

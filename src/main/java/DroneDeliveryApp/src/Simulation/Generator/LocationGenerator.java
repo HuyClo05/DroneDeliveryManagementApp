@@ -1,7 +1,10 @@
 package DroneDeliveryApp.src.Simulation.Generator;
 
-import java.util.Random;
 import DroneDeliveryApp.src.domain.Location;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * The LocationGenerator class is responsible for generating a list of random locations.
@@ -26,7 +29,7 @@ public final class LocationGenerator {
     private String defaultCountry;
     private static final float latitudeRange = 180f;
     private static final float longitudeRange = 360f;
-    private final Location[] locationList;
+    private final List<Location> locationList;
 
     /**
      * Constructs an instance of the LocationGenerator class to generate a list of Location objects
@@ -66,54 +69,72 @@ public final class LocationGenerator {
      * and default address details.
      *
      * @param locationNum the number of Location objects to generate; must be a positive integer
-     * @return an array of Location objects, each populated with default address details
+     * @return an ArrayList of Location objects, each populated with default address details
      *         and random latitude and longitude values
      * @throws IllegalArgumentException if locationNum is less than or equal to zero
      */
-    private Location[] generateLocations (int locationNum){
+    private List<Location> generateLocations (int locationNum){
         if (locationNum <= 0) {
             throw new IllegalArgumentException("Number of locations must be positive");
         }
 
-        Location[] locations = new Location[locationNum];
+        List<Location> locations = new ArrayList<>(locationNum);
         for (int i = 0; i < locationNum; i ++) {
             float newLatitude = (random.nextFloat() * latitudeRange) - 90f;
             float newLongitude = (random.nextFloat() * longitudeRange) - 180f;
 
-            locations[i] = new Location(this.defaultAddressLine1,
+            locations.add(new Location(this.defaultAddressLine1,
                                         this.defaultAddressLine2,
                                         this.defaultCity,
                                         this.defaultState,
                                         this.defaultZipCode,
                                         this.defaultCountry,
                                         newLatitude,
-                                        newLongitude);
+                                        newLongitude));
         }
         return locations;
     }
 
     // Getters
-    public Location[] getLocationList() { return this.locationList.clone(); }
+    public List<Location> getLocationList() {
+        return new ArrayList<>(this.locationList);
+    }
 
     // Setters
     public void setDefaultAddressLine(String addressLine1, String addressLine2){
+        for (Location location : this.locationList){
+            location.setAddressLine1(addressLine1);
+            location.setAddressLine2(addressLine2);
+        }
         this.defaultAddressLine1 = addressLine1;
         this.defaultAddressLine2 = addressLine2;
     }
 
     public void setDefaultCity(String city){
+        for (Location location : this.locationList){
+            location.setCity(city);
+        }
         this.defaultCity = city;
     }
 
     public void setDefaultState(String state){
+        for (Location location : this.locationList){
+            location.setState(state);
+        }
         this.defaultState = state;
     }
 
     public void setDefaultZipCode(String zipCode){
+        for (Location location : this.locationList){
+            location.setZipcode(zipCode);
+        }
         this.defaultZipCode = zipCode;
     }
 
     public void setDefaultCountry(String country){
+        for (Location location : this.locationList){
+            location.setCountry(country);
+        }
         this.defaultCountry = country;
     }
 }

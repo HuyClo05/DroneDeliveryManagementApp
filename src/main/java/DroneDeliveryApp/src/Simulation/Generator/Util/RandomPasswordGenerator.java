@@ -1,5 +1,7 @@
 package DroneDeliveryApp.src.Simulation.Generator.Util;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -10,7 +12,7 @@ import java.util.Random;
 public final class RandomPasswordGenerator {
     private final Random random;
     private static final String ALPHANUMERIC_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    private final String[] passwordList;
+    private final List<String> passwordList;
 
     /**
      * Constructs a RandomPasswordGenerator instance with the specified number of passwords.
@@ -30,24 +32,25 @@ public final class RandomPasswordGenerator {
      * determined length between 8 and 17 characters.
      *
      * @param passwordNum the number of passwords to generate; must be a positive integer
-     * @return an array of randomly generated passwords
+     * @return an ArrayList of randomly generated passwords
      * @throws IllegalArgumentException if the specified number of passwords is non-positive
      */
-    public String[] generatePassword(int passwordNum) {
-        String[] passwords = new String[passwordNum];
+    public List<String> generatePassword(int passwordNum) {
+        List<String> passwords = new ArrayList<>(passwordNum);
+
         for (int i = 0; i < passwordNum; i++) {
             StringBuilder password = new StringBuilder();
             int passwordLength = random.nextInt(10) + 8;
             for (int j = 0; j < passwordLength; j++) {
                 password.append(ALPHANUMERIC_CHARS.charAt(random.nextInt(ALPHANUMERIC_CHARS.length())));
             }
-            passwords[i] = password.toString();
+            passwords.add(password.toString());
         }
         return passwords;
     }
 
     // Getters
-    public String[] getPasswordList() {
-        return this.passwordList.clone();
+    public List<String> getPasswordList() {
+        return new ArrayList<>(this.passwordList);
     }
 }

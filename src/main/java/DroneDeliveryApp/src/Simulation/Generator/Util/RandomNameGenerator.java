@@ -2,33 +2,33 @@ package DroneDeliveryApp.src.Simulation.Generator.Util;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A utility class for generating random names composed of a first name and a last name.
  * The names are sourced from predefined arrays of possible first names and last names.
  */
 public final class RandomNameGenerator {
+    private static final List<String> DEFAULT_FIRST_NAMES = new ArrayList<>(
+            Arrays.asList("Luna", "Maxwell", "Astra", "Kai", "Nova", "Orion", "Aria", "Leo",
+                    "Aurora", "Sage", "Caspian", "Lyra", "Vega", "Celeste",
+                    "Cosmos", "Stella", "Apollo", "Carina", "Thea", "Zephyr", "Perseus",
+                    "Astrid", "Cassidy", "Echo", "Jupiter", "Mars", "Mercury", "Neptune",
+                    "Solaris", "Terra", "Venus", "Zeus", "Andromeda", "Callisto", "Helios", "Io")
+    );
+
+    private static final List<String> DEFAULT_LAST_NAMES = new ArrayList<>(
+            Arrays.asList("Storm", "Night", "Iron", "Blaze", "Shadow", "Frost", "Sky", "Drake",
+                    "Steel", "Flame", "Thunder", "Wolf", "Hawk", "Stone", "Crest", "Vale",
+                    "Blade", "Dawn", "Dusk", "Fang", "Glacier", "Phoenix", "River", "Slate",
+                    "Spark", "Star", "Swift", "Tide", "Wing", "Winter", "Ash", "Cloud",
+                    "Ember", "Forest", "Moon", "Rain", "Snow", "Wind", "Claw", "Mountain")
+    );
     private final Random random;
-    private final String[] firstNames;
-    private final String[] lastNames;
-    private final String[] nameList;
-    private static final String[] DEFAULT_FIRST_NAMES = {
-            "Luna", "Maxwell", "Astra", "Kai", "Nova", "Orion", "Aria", "Leo",
-            "Aurora", "Sage", "Caspian", "Lyra", "Vega", "Celeste",
-            "Cosmos", "Stella", "Apollo", "Carina", "Thea", "Zephyr", "Perseus",
-            "Astrid", "Cassidy", "Echo", "Jupiter", "Mars", "Mercury", "Neptune",
-            "Solaris", "Terra", "Venus", "Zeus", "Andromeda", "Callisto", "Helios", "Io"
-    };
-    private static final String[] DEFAULT_LAST_NAMES = {
-            "Storm", "Night", "Iron", "Blaze", "Shadow", "Frost", "Sky", "Drake",
-            "Steel", "Flame", "Thunder", "Wolf", "Hawk", "Stone", "Crest", "Vale",
-            "Blade", "Dawn", "Dusk", "Fang", "Glacier", "Phoenix", "River", "Slate",
-            "Spark", "Star", "Swift", "Tide", "Wing", "Winter", "Ash", "Cloud",
-            "Ember", "Forest", "Moon", "Rain", "Snow", "Wind", "Claw", "Mountain"
-    };
+    private final List<String> firstNames;
+    private final List<String> lastNames;
+    private final List<String> nameList;
+
 
     /**
      * Constructs a RandomNameGenerator object that generates a specified number
@@ -42,26 +42,26 @@ public final class RandomNameGenerator {
      * @throws IllegalArgumentException if the number of names is non-positive
      *                                  or exceeds the total possible unique combinations
      */
-    public RandomNameGenerator(int nameNum, String[] customFirstNames, String[] customLastNames, Random random) {
+    public RandomNameGenerator(int nameNum, List<String> customFirstNames, List<String> customLastNames, Random random) {
         this.random = random;
-        this.firstNames = customFirstNames != null && customFirstNames.length > 0 ? customFirstNames : DEFAULT_FIRST_NAMES;
-        this.lastNames = customLastNames != null && customLastNames.length > 0 ? customLastNames : DEFAULT_LAST_NAMES;
+        this.firstNames = customFirstNames != null && !customFirstNames.isEmpty() ? customFirstNames : DEFAULT_FIRST_NAMES;
+        this.lastNames = customLastNames != null && !customLastNames.isEmpty() ? customLastNames : DEFAULT_LAST_NAMES;
         this.nameList = generateName(nameNum);
     }
 
 
     /**
-     * Generates an array of unique names composed of a first name and a last name.
+     * Generates an ArrayList of unique names composed of a first name and a last name.
      * The names are randomly selected from predefined arrays of first and last names.
      *
      * @param nameNum the number of unique names to generate; must be a positive integer
-     * @return an array of unique names in the format "FirstName LastName"
+     * @return an ArrayList of unique names in the format "FirstName LastName"
      * @throws IllegalArgumentException if the number of names is non-positive
      *                                  or exceeds the total possible unique combinations
      */
-    public @NotNull String[] generateName(int nameNum) {
-        int firstNamesLength = this.firstNames.length;
-        int lastNamesLength = this.lastNames.length;
+    public @NotNull List<String> generateName(int nameNum) {
+        int firstNamesLength = this.firstNames.size();
+        int lastNamesLength = this.lastNames.size();
 
         if (nameNum <= 0) {
             throw new IllegalArgumentException("Number of names must be positive");
@@ -70,18 +70,19 @@ public final class RandomNameGenerator {
             throw new IllegalArgumentException("Cannot generate more unique names than possible combinations");
         }
 
-        Set<String> uniqueNames = new HashSet<>();
+        List<String> uniqueNames = new ArrayList<>(nameNum);
+
         while (uniqueNames.size() < nameNum) {
             int firstIndex = random.nextInt(firstNamesLength);
             int lastIndex = random.nextInt(lastNamesLength);
-            uniqueNames.add(this.firstNames[firstIndex] + " " + this.lastNames[lastIndex]);
+            uniqueNames.add(this.firstNames.get(firstIndex) + " " + this.lastNames.get(lastIndex));
         }
 
-        return uniqueNames.toArray(new String[0]);
+        return uniqueNames;
     }
 
     // Getters
-    public String[] getNameList() {
-        return this.nameList.clone();
+    public List<String> getNameList() {
+        return new ArrayList<>(this.nameList);
     }
 }

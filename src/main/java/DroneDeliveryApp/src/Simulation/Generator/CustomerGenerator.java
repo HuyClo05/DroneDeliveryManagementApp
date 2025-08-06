@@ -1,15 +1,17 @@
 package DroneDeliveryApp.src.Simulation.Generator;
 
-import java.util.Random;
-
 import DroneDeliveryApp.src.Simulation.Generator.Util.RandomEmailGenerator;
 import DroneDeliveryApp.src.Simulation.Generator.Util.RandomNameGenerator;
 import DroneDeliveryApp.src.Simulation.Generator.Util.RandomPhoneGenerator;
 import DroneDeliveryApp.src.Simulation.Generator.Util.RandomPasswordGenerator;
 import DroneDeliveryApp.src.domain.Location;
-import DroneDeliveryApp.src.domain.ShippingPackage;
 import DroneDeliveryApp.src.domain.user.Customer;
+
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * The CustomerGenerator class is responsible for generating an array of sender and recipient
@@ -24,9 +26,8 @@ final public class CustomerGenerator {
     private final Random random;
     private final LocationGenerator senderLocationGenerator;
     private final LocationGenerator recipientLocationGenerator;
-    private final Customer[] senderList;
-    private final Customer[] recipientList;
-    private final PackageGenerator packageGenerator;
+    private final List<Customer> senderList;
+    private final List<Customer> recipientList;
 
     /**
      * Constructs a new CustomerGenerator instance, which creates a list of sender customers,
@@ -34,12 +35,11 @@ final public class CustomerGenerator {
      * between those customers.
      *
      * @param customerNum the number of customers to generate; must be a positive integer
-     * @param maxWeight the maximum weight for any package; must be a positive float
      * @param random a Random object used for generating random values; must not be null
      * @throws IllegalArgumentException if customerNum is less than or equal to 0
      * @throws IllegalArgumentException if random is null
      */
-    public CustomerGenerator (int customerNum, float maxWeight, Random random){
+    public CustomerGenerator (int customerNum, Random random){
         if (customerNum <= 0) {
             throw new IllegalArgumentException("customerNum must be positive");
         }
@@ -50,15 +50,42 @@ final public class CustomerGenerator {
         this.random = random;
         this.senderLocationGenerator = setupLocation(customerNum, "sender");
         this.recipientLocationGenerator = setupLocation(customerNum, "recipient");
-        this.senderList = generateCustomer(customerNum, recipientLocationGenerator);
+        this.senderList = generateCustomer(customerNum, senderLocationGenerator);
         this.recipientList = generateCustomer(customerNum, recipientLocationGenerator);
-        this.packageGenerator = new PackageGenerator(customerNum,
-                                                    maxWeight,
-                                                    senderList,
-                                                    recipientList,
-                                                    senderLocationGenerator.getLocationList(),
-                                                    recipientLocationGenerator.getLocationList(),
-                                                    random);
+    }
+
+    /**
+     * Generates an array of Customer objects based on the specified number of customers and user type.
+     * Each Customer object is populated with a name, email, phone number, password, and location,
+     * which are randomly generated.
+     *
+     * @param customerNum the number of customers to generate; must be a positive integer
+     * @param locationGenerator the locationGenerator you choose
+     * @return an ArrayList of Customer objects with randomly generated details
+     * @throws IllegalArgumentException if userType is not "sender" or "recipient"
+     */
+    private List<Customer> generateCustomer (int customerNum, LocationGenerator locationGenerator) {
+        RandomNameGenerator nameGenerator = new RandomNameGenerator(customerNum, null, null, random);
+        RandomEmailGenerator emailGenerator = new RandomEmailGenerator(customerNum, nameGenerator.getNameList(), null , random);
+        RandomPhoneGenerator phoneGenerator = new RandomPhoneGenerator(customerNum, random);
+        RandomPasswordGenerator passwordGenerator = new RandomPasswordGenerator(customerNum, random);
+
+        List<Customer> customers = new ArrayList<>(customerNum);
+        for (int i = 0; i < customerNum; i++) {
+            String newName = nameGenerator.getNameList().get(i);
+            String newEmail = emailGenerator.getEmailList().get(i);
+            String newPhone = phoneGenerator.getPhoneList().get(i);
+            String newPassword = passwordGenerator.getPasswordList().get(i);
+            Location newLocation = locationGenerator.getLocationList().get(i);
+
+            Customer newCustomer = new Customer(newName,
+                                                newEmail,
+                                                newPhone,
+                                                newPassword,
+                                                newLocation);
+            customers.add(newCustomer);
+        }
+        return customers;
     }
 
     private @NotNull LocationGenerator setupLocation (int customerNum, String userType) {
@@ -82,42 +109,23 @@ final public class CustomerGenerator {
         return locationGenerator;
     }
 
-    /**
-     * Generates an array of Customer objects based on the specified number of customers and user type.
-     * Each Customer object is populated with a name, email, phone number, password, and location,
-     * which are randomly generated.
-     *
-     * @param customerNum the number of customers to generate; must be a positive integer
-     * @param locationGenerator the locationGenerator you choose
-     * @return an array of Customer objects with randomly generated details
-     * @throws IllegalArgumentException if userType is not "sender" or "recipient"
-     */
-    private Customer [] generateCustomer (int customerNum, LocationGenerator locationGenerator) {
-        RandomNameGenerator nameGenerator = new RandomNameGenerator(customerNum, null, null, random);
-        RandomEmailGenerator emailGenerator = new RandomEmailGenerator(customerNum, nameGenerator.getNameList(), null , random);
-        RandomPhoneGenerator phoneGenerator = new RandomPhoneGenerator(customerNum, random);
-        RandomPasswordGenerator passwordGenerator = new RandomPasswordGenerator(customerNum, random);
+    // Getters
 
-        Customer[] customers = new Customer[customerNum];
-        for (int i = 0; i < customerNum; i++) {
-            String newName = nameGenerator.getNameList()[i];
-            String newEmail = emailGenerator.getEmailList()[i];
-            String newPhone = phoneGenerator.getPhoneList()[i];
-            String newPassword = passwordGenerator.getPasswordList()[i];
-            Location newLocation = locationGenerator.getLocationList()[i];
-
-            Customer newCustomer = new Customer(newName,
-                                                newEmail,
-                                                newPhone,
-                                                newPassword,
-                                                newLocation);
-            customers[i] = newCustomer;
-        }
-        return customers;
+    public LocationGenerator getRecipientLocationGenerator() {
+        return this.recipientLocationGenerator;
     }
 
-    // Getters
-    public PackageGenerator getPackageGenerator() { return this.packageGenerator; }
-    public Customer[] getRecipientList() { return this.recipientList.clone(); }
-    public Customer[] getSenderList() { return this.senderList.clone(); }
+    public LocationGenerator getSenderLocationGenerator() {
+        return this.senderLocationGenerator;
+    }
+
+    @Contract(value = " -> new", pure = true)
+    public @NotNull List<Customer> getSenderList() {
+        return new ArrayList<>(this.senderList);
+    }
+
+    @Contract(value = " -> new", pure = true)
+    public @NotNull List<Customer> getRecipientList() {
+        return new ArrayList<>(this.recipientList);
+    }
 }

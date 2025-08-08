@@ -4,5 +4,8 @@ GET http://localhost:8080/api/v1/customers/senders
 ### GET recipients informatiom
 GET http://localhost:8080/api/v1/customers/recipients
 
-### Gat package information
+### GET package information
 GET http://localhost:8080/api/v1/customers/packages
+
+### GET delivery information
+GET http://localhost:8080/api/v1/customers/deliveries

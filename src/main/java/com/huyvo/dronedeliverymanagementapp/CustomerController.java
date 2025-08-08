@@ -1,12 +1,15 @@
 package com.huyvo.dronedeliverymanagementapp;
 
-import DroneDeliveryApp.src.Simulation.Generator.PackageGenerator;
-import DroneDeliveryApp.src.domain.ShippingPackage;
+import com.huyvo.dronedeliverymanagementapp.classes.domains.ShippingPackage;
+import com.huyvo.dronedeliverymanagementapp.classes.domains.user.Customer;
+import com.huyvo.dronedeliverymanagementapp.classes.domains.Delivery;
+import com.huyvo.dronedeliverymanagementapp.generator.PackageGenerator;
+import com.huyvo.dronedeliverymanagementapp.generator.CustomerGenerator;
+import com.huyvo.dronedeliverymanagementapp.generator.DeliveryGenerator;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
-import DroneDeliveryApp.src.Simulation.Generator.CustomerGenerator;
-import DroneDeliveryApp.src.domain.user.Customer;
 import java.util.List;
 import java.util.Random;
 
@@ -16,9 +19,10 @@ public class CustomerController {
     Random random = new Random();
     int NUM_CUSTOMERS = 1;
 
-    CustomerGenerator customerGenerator = new CustomerGenerator(NUM_CUSTOMERS, random);
-    List<Customer> senderList = customerGenerator.getSenderList();
-    List<Customer> recipientList = customerGenerator.getRecipientList();
+    CustomerGenerator senderGenerator = new CustomerGenerator(NUM_CUSTOMERS, random);
+    CustomerGenerator recipientGenerator = new CustomerGenerator(NUM_CUSTOMERS, random);
+    List<Customer> senderList = senderGenerator.getCustomerList();
+    List<Customer> recipientList = recipientGenerator.getCustomerList();
 
     PackageGenerator packageGenerator = new PackageGenerator(NUM_CUSTOMERS,
                                                             22.7f,
@@ -27,7 +31,8 @@ public class CustomerController {
                                                             random);
     List<ShippingPackage> packageList = packageGenerator.getPackageList();
 
-
+    DeliveryGenerator deliveryGenerator = new DeliveryGenerator(packageList, random);
+    List<Delivery> deliveryList = deliveryGenerator.getDeliveryList();
 
     @GetMapping("/senders")
     public List<Customer> getAllSender() {
@@ -42,6 +47,11 @@ public class CustomerController {
     @GetMapping("/packages")
     public List<ShippingPackage> getAllPackage() {
         return packageList;
+    }
+
+    @GetMapping("/deliveries")
+    public List<Delivery> getAllDelivery() {
+        return deliveryList;
     }
 }
 
